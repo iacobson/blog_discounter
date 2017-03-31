@@ -17,10 +17,11 @@ defmodule Shop.Web.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Shop.Web do
-  #   pipe_through :api
-  # end
+  scope "/api", Shop.Web do
+    pipe_through :api
+    resources "/products", ProductController, only: [:index, :create]
+  end
 end

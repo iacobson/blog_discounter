@@ -9,3 +9,16 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+(1 .. 1000)
+|> Enum.each(fn(_x) ->
+
+    previous = Enum.random(10..1000)
+    actual = round(previous * (Enum.random(20 ..90) / 100))
+    Shop.Repo.insert!(
+      %Shop.Sales.Product{
+        previous: previous,
+        actual: actual
+      }
+    )
+  end)
