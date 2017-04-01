@@ -4,7 +4,8 @@ defmodule Shop.Sales do
   alias Shop.Sales.Product
 
   def list_products do
-    Repo.all(Product)
+    top_discounts_query()
+    |> Repo.all()
   end
 
   def create_product(attrs \\ %{}) do
@@ -17,5 +18,15 @@ defmodule Shop.Sales do
     product
     |> cast(attrs, [:previous, :actual])
     |> validate_required([:previous, :actual])
+  end
+
+  defp top_discounts_query do
+    from product in Product,
+      select: %{
+        id: product.id,
+        previous: product.previous,
+        actual: product.actual,
+        discount: fragment("ROUND((1 - (1.0 * ?) / ?) * 100, 2) as discount", product.actual, product.previous)},
+      order_by: [desc: fragment("discount")], limit: 10
   end
 end
