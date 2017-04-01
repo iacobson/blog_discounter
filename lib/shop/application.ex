@@ -14,6 +14,7 @@ defmodule Shop.Application do
       supervisor(Shop.Web.Endpoint, []),
       # Start your own worker by calling: Shop.Worker.start_link(arg1, arg2, arg3)
       # worker(Shop.Worker, [arg1, arg2, arg3]),
+      worker(Shop.Cache, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
