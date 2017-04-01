@@ -15,6 +15,10 @@ defmodule Shop.Cache do
     GenServer.cast(__MODULE__, :post_product_v2)
   end
 
+  def post_product_v3(product) do
+    GenServer.cast(__MODULE__, {:post_product_v3, product})
+  end
+
   # CALLBACKS
   def init(:ok) do
     {:ok, Sales.list_products()}
@@ -26,5 +30,38 @@ defmodule Shop.Cache do
 
   def handle_cast(:post_product_v2, _state) do
     {:noreply, Sales.list_products()}
+  end
+
+  def handle_cast({:post_product_v3, new_product}, state) do
+    new_discount = discount(new_product)
+    last_discount = List.last(state)[:discount]
+
+    {:noreply, new_state(new_discount, last_discount, new_product, state)}
+  end
+
+  # HELPERS
+  defp discount(product) do
+    discount = (1.0 - (product.actual / product.previous)) * 100
+    Float.round(discount, 2)
+  end
+
+  defp new_state(new_discount, last_discount, new_product, state)
+    when new_discount > last_discount do
+
+    state
+    |> List.delete_at(-1)
+    |> List.insert_at(-1, formatted(new_product, new_discount))
+    |> Enum.sort(&(&1.discount > &2.discount))
+  end
+
+  defp new_state(_new_discount, _last_discount, _new_product, state), do: state
+
+  def formatted(new_product, new_discount) do
+    %{
+      id: new_product.id,
+      previous: new_product.previous,
+      actual: new_product.actual,
+      discount: new_discount
+    }
   end
 end

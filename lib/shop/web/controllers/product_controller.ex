@@ -31,4 +31,13 @@ defmodule Shop.Web.ProductController do
       |> render("show.json", product: product)
     end
   end
+
+  def create(conn, %{"version" => "v3"}) do
+    with {:ok, %Product{} = product} <- Sales.create_product() do
+      Cache.post_product_v3(product)
+      conn
+      |> put_status(:created)
+      |> render("show.json", product: product)
+    end
+  end
 end
