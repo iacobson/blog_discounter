@@ -8,9 +8,11 @@ defmodule Shop.Sales do
     |> Repo.all()
   end
 
-  def create_product(attrs \\ %{}) do
+  def create_product() do
+    previous = Enum.random(10..1000)
+    actual = round(previous * (Enum.random(20 ..90) / 100))
     %Product{}
-    |> product_changeset(attrs)
+    |> product_changeset(%{previous: previous, actual: actual})
     |> Repo.insert()
   end
 

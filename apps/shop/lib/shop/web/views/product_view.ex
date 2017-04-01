@@ -6,6 +6,10 @@ defmodule Shop.Web.ProductView do
     %{data: render_many(products, ProductView, "product.json")}
   end
 
+  def render("show.json", %{product: product}) do
+    %{data: %{id: product.id}}
+ end
+
   def render("product.json", %{product: product}) do
     %{id: product.id,
       previous: product.previous,
