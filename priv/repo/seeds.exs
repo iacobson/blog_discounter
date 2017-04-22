@@ -10,7 +10,7 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-(1 .. 1000)
+(1 .. 5000)
 |> Enum.each(fn(_x) ->
 
     previous = Enum.random(10..1000)

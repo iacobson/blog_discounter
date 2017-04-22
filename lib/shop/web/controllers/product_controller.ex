@@ -5,17 +5,17 @@ defmodule Shop.Web.ProductController do
 
   action_fallback Shop.Web.FallbackController
 
-  def index(conn, %{"version" => "v1"}) do
+  def get_discounts(conn, %{"version" => "v1"}) do
     products = Sales.list_products()
     render(conn, "index.json", products: products)
   end
 
-  def index(conn, %{"version" => "v2"}) do
+  def get_discounts(conn, %{"version" => "v2"}) do
     products = Cache.get_products_v2()
     render(conn, "index.json", products: products)
   end
 
-  def create(conn, %{"version" => "v1"}) do
+  def new_product(conn, %{"version" => "v1"}) do
     with {:ok, %Product{} = product} <- Sales.create_product() do
       conn
       |> put_status(:created)
@@ -23,7 +23,7 @@ defmodule Shop.Web.ProductController do
     end
   end
 
-  def create(conn, %{"version" => "v2"}) do
+  def new_product(conn, %{"version" => "v2"}) do
     with {:ok, %Product{} = product} <- Sales.create_product() do
       Cache.post_product_v2()
       conn
@@ -32,7 +32,7 @@ defmodule Shop.Web.ProductController do
     end
   end
 
-  def create(conn, %{"version" => "v3"}) do
+  def new_product(conn, %{"version" => "v3"}) do
     with {:ok, %Product{} = product} <- Sales.create_product() do
       Cache.post_product_v3(product)
       conn

@@ -22,7 +22,7 @@ defmodule Shop.Web.Router do
 
   scope "/api", Shop.Web do
     pipe_through :api
-    get "/products/:version", ProductController, :index
-    post "/products/:version", ProductController, :create
+    get "/get_discounts/:version", ProductController, :get_discounts
+    get "/new_product/:version", ProductController, :new_product
   end
 end
