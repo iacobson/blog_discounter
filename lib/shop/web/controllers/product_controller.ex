@@ -5,12 +5,12 @@ defmodule Shop.Web.ProductController do
 
   action_fallback Shop.Web.FallbackController
 
-  def get_discounts(conn, %{"version" => "v1"}) do
+  def top_discounts(conn, %{"version" => "v1"}) do
     products = Sales.list_products()
     render(conn, "index.json", products: products)
   end
 
-  def get_discounts(conn, %{"version" => "v2"}) do
+  def top_discounts(conn, %{"version" => "v2"}) do
     products = Cache.get_products_v2()
     render(conn, "index.json", products: products)
   end
