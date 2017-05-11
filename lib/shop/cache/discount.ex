@@ -16,7 +16,7 @@ defmodule Shop.Cache do
   end
 
   def post_product_v3(product) do
-    GenServer.cast(__MODULE__, {:post_product_v3, product})
+    GenServer.call(__MODULE__, {:post_product_v3, product})
   end
 
   # CALLBACKS
@@ -28,15 +28,16 @@ defmodule Shop.Cache do
     {:reply, state, state}
   end
 
-  def handle_cast(:post_product_v2, _state) do
-    {:noreply, Sales.list_products()}
-  end
-
-  def handle_cast({:post_product_v3, new_product}, state) do
+  def handle_call({:post_product_v3, new_product}, _from, state) do
     new_discount = discount(new_product)
     last_discount = List.last(state)[:discount]
+    state = new_state(new_discount, last_discount, new_product, state)
 
-    {:noreply, new_state(new_discount, last_discount, new_product, state)}
+    {:reply, state, state}
+  end
+
+  def handle_cast(:post_product_v2, _state) do
+    {:noreply, Sales.list_products()}
   end
 
   # HELPERS
