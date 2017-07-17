@@ -42,8 +42,9 @@ defmodule Shop.Cache do
 
   # HELPERS
   defp discount(product) do
-    discount = (1.0 - (product.actual / product.previous)) * 100
-    Float.round(discount, 2)
+    (1.0 - (product.actual / product.previous)) * 100
+    |> Decimal.new()
+    |> Decimal.round(2)
   end
 
   defp new_state(new_discount, last_discount, new_product, state)
