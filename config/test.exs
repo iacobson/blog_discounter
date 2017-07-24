@@ -17,3 +17,5 @@ config :shop, Shop.Repo,
   database: "shop_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :shop, :cache, Shop.MockCache
