@@ -21,11 +21,21 @@ defmodule Shop.Cache do
 
   # CALLBACKS
   def init(:ok) do
-    {:ok, Sales.list_products()}
+    {:ok, :empty}
+  end
+
+  def handle_call(:get_products_v2, _from, :empty) do
+    products = Sales.list_products()
+    {:reply, products, products}
   end
 
   def handle_call(:get_products_v2, _from, state) do
     {:reply, state, state}
+  end
+
+  def handle_call({:post_product_v3, new_product}, from, :empty) do
+    products = Sales.list_products()
+    handle_call({:post_product_v3, new_product}, from, products)
   end
 
   def handle_call({:post_product_v3, new_product}, _from, state) do

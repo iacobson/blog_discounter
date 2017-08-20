@@ -1,5 +1,5 @@
 defmodule Shop.CacheTest do
-  use Shop.DataCase
+  use Shop.DataCase, async: true
   alias Shop.Cache
   alias Shop.Sales.ProductFactory
 
@@ -7,8 +7,9 @@ defmodule Shop.CacheTest do
     for actual <- (700 .. 730) do
       ProductFactory.insert(:product, previous: 900, actual: actual)
     end
-    Supervisor.terminate_child(Shop.Supervisor, Cache)
-    Supervisor.restart_child(Shop.Supervisor, Cache)
+
+    pid = Process.whereis(Cache)
+    Ecto.Adapters.SQL.Sandbox.allow(Repo, self(), pid)
 
     :ok
   end
